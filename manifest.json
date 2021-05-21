@@ -1,0 +1,10 @@
+{
+  "manifest_version": 2,
+  "name": "Medium URL Switcher",
+  "version": "0.1.0",
+  "description": "Bypass Egyptian Restriction on the medium website.",
+  "browser_action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": ["tabs"]
+}
