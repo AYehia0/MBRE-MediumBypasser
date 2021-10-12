@@ -1,9 +1,14 @@
-#acho {
-  display: block;
-  margin: auto;
+* {
+  box-sizing: border-box;
+}
+
+body {
+  width: 100px;
 }
 
 #dialog-box {
   text-align: center;
-  font-size: medium;
+  /* font-size: ; */
+  font-weight: bold;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }

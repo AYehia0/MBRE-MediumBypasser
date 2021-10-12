@@ -1,50 +1,41 @@
-document.addEventListener("DOMContentLoaded", () => {
-  // const dialogBox = document.getElementById("dialog-box");
-  const query = { active: true, currentWindow: true };
+// guide: https://developer.chrome.com/docs/extensions/reference/tabs/#method-query
 
-  //https://developer.chrome.com/docs/extensions/reference/tabs/#method-query
+/*
+EXAMPLE:
+https://medium.com/volosoft/whats-new-in-rxjs-7-a11cc564c6c0 -> https://volosoft.medium.com/whats-new-in-rxjs-7-a11cc564c6c0
+*/
 
-  console.log("wow");
+document.addEventListener("DOMContentLoaded", async () => {
+  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+  const currentTab = { data: tabs[0], url: tabs[0].url };
 
-  chrome.tabs.query(query, (tabs) => {
-    const tab = tabs[0];
-    const tabURL = tabs[0].url;
-    console.log(tabs[0]);
-    // dialogBox.innerHTML = getBarkedTitle(tabs[0].title);
-    const mediumRegex = /.*medium.com\/.+\/./;
-    if (mediumRegex.test(tabURL)) {
-      //https://medium.com/volosoft/whats-new-in-rxjs-7-a11cc564c6c0
-      let tabURLArray = tabURL.split("//");
-      // tabURLArray.shift();
-      tabURLArray = tabURLArray[1].split("/");
-      const writerName = tabURLArray[1];
-      const restOfURL = tabURLArray.slice(2).join("/");
+  const dialogBox = document.getElementById("dialog-box");
 
-      console.log(`https://${writerName}.medium.com/${restOfURL}`);
-      chrome.tabs.update(tab.id, {
-        url: `https://${writerName}.medium.com/${restOfURL}`,
-      });
-    } else {
-      console.log("not medium");
-    }
-  });
+  if (testMediumRegex(currentTab.url)) {
+    dialogBox.innerText = "You are being redirected.";
+
+    const { writerName, restOfURL } = sliceMediumURL(currentTab.url);
+
+    // chrome.tabs.update();
+
+    console.log(`https://${writerName}.medium.com/${restOfURL}`);
+    chrome.tabs.update(currentTab.data.id, {
+      url: `https://${writerName}.medium.com/${restOfURL}`,
+    });
+  } else {
+    dialogBox.innerText = "It isn't a medium article link!";
+  }
 });
 
-const getBarkedTitle = (tabTitle) => {
-  const barkTitle = `${getRandomBark()} Ahem.. I mean, we are at: ${tabTitle}`;
-  return barkTitle;
-};
+function testMediumRegex(url) {
+  const mediumRegex = /.*medium.com\/.+\/./;
+  return mediumRegex.test(url);
+}
 
-const barks = [
-  "Barf barf!",
-  "Birf birf!",
-  "Woof woof!",
-  "Arf arf!",
-  "Yip yip!",
-  "Biiiirf!",
-];
-
-const getRandomBark = () => {
-  const bark = barks[Math.floor(Math.random() * barks.length)];
-  return bark;
-};
+function sliceMediumURL(url) {
+  let urlWithoutHTTP = url.split("//")[1];
+  urlComponents = urlWithoutHTTP.split("/");
+  const writerName = urlComponents[1];
+  const restOfURL = urlComponents.slice(2).join("/");
+  return { writerName, restOfURL };
+}
