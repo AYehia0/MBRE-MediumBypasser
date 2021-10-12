@@ -9,6 +9,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
   const currentTab = { data: tabs[0], url: tabs[0].url };
 
+  console.log(currentTab.data.id);
+  console.log(typeof currentTab.data.id);
+
+  console.log(parseInt(currentTab.data.id));
+  console.log(typeof parseInt(currentTab.data.id));
+
   const dialogBox = document.getElementById("dialog-box");
 
   if (testMediumRegex(currentTab.url)) {
@@ -33,7 +39,7 @@ function testMediumRegex(url) {
 }
 
 function sliceMediumURL(url) {
-  let urlWithoutHTTP = url.split("//")[1];
+  const urlWithoutHTTP = url.split("//")[1];
   urlComponents = urlWithoutHTTP.split("/");
   const writerName = urlComponents[1];
   const restOfURL = urlComponents.slice(2).join("/");
