@@ -8,7 +8,8 @@
   },
   "permissions": [
     "tabs",
-    "activeTab"
+    "activeTab",
+    "storage"
   ],
   "icons": {
     "16":  "/icons/icon16.png",
